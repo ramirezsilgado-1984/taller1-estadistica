@@ -1,0 +1,899 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fundamentos de Estadística – Administración Pública</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #0d2137;
+    --blue: #1a4a7a;
+    --accent: #c8973a;
+    --light: #f5f0e8;
+    --white: #ffffff;
+    --text: #1c2b3a;
+    --muted: #5a6a7a;
+    --border: #ddd5c4;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Source Sans 3', sans-serif;
+    background: var(--light);
+    color: var(--text);
+    font-size: 17px;
+    line-height: 1.75;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    background: var(--navy);
+    border-bottom: 3px solid var(--accent);
+    padding: 0 2rem;
+    display: flex; align-items: center; justify-content: space-between;
+    height: 56px;
+  }
+  .nav-brand {
+    font-family: 'Playfair Display', serif;
+    color: var(--accent);
+    font-size: 1.1rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+  }
+  .nav-links { display: flex; gap: 1.5rem; list-style: none; }
+  .nav-links a {
+    color: rgba(255,255,255,0.75);
+    text-decoration: none;
+    font-size: 0.82rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--accent); }
+
+  /* HERO */
+  .hero {
+    min-height: 100vh;
+    background: var(--navy);
+    display: flex; align-items: center; justify-content: center;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    padding-top: 56px;
+  }
+  .hero::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse at 30% 60%, rgba(26,74,122,0.6) 0%, transparent 60%),
+                radial-gradient(ellipse at 70% 30%, rgba(200,151,58,0.15) 0%, transparent 50%);
+  }
+  .hero-grid {
+    position: absolute; inset: 0;
+    background-image: linear-gradient(rgba(255,255,255,0.04) 1px, transparent 1px),
+                      linear-gradient(90deg, rgba(255,255,255,0.04) 1px, transparent 1px);
+    background-size: 60px 60px;
+  }
+  .hero-content { position: relative; z-index: 1; max-width: 800px; padding: 2rem; }
+  .hero-tag {
+    display: inline-block;
+    background: var(--accent);
+    color: var(--navy);
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    padding: 0.4rem 1.2rem;
+    border-radius: 2px;
+    margin-bottom: 2rem;
+    animation: fadeUp 0.6s ease both;
+  }
+  .hero h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2.5rem, 6vw, 4.5rem);
+    color: var(--white);
+    font-weight: 900;
+    line-height: 1.1;
+    margin-bottom: 1rem;
+    animation: fadeUp 0.7s 0.1s ease both;
+  }
+  .hero h1 span { color: var(--accent); }
+  .hero-sub {
+    font-size: 1.15rem;
+    color: rgba(255,255,255,0.65);
+    font-weight: 300;
+    margin-bottom: 3rem;
+    animation: fadeUp 0.7s 0.2s ease both;
+  }
+  .hero-meta {
+    display: grid; grid-template-columns: repeat(2, 1fr);
+    gap: 1px; max-width: 480px; margin: 0 auto;
+    border: 1px solid rgba(255,255,255,0.12);
+    animation: fadeUp 0.7s 0.3s ease both;
+  }
+  .hero-meta-item {
+    padding: 1rem 1.5rem;
+    background: rgba(255,255,255,0.04);
+    text-align: left;
+  }
+  .hero-meta-item:nth-child(odd) { border-right: 1px solid rgba(255,255,255,0.1); }
+  .hero-meta-item:nth-child(1),
+  .hero-meta-item:nth-child(2) { border-bottom: 1px solid rgba(255,255,255,0.1); }
+  .meta-label { font-size: 0.7rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent); font-weight: 600; }
+  .meta-value { font-size: 0.92rem; color: rgba(255,255,255,0.85); margin-top: 0.2rem; }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* LAYOUT */
+  .container { max-width: 900px; margin: 0 auto; padding: 0 2rem; }
+
+  section { padding: 5rem 0; }
+  section:nth-child(even) { background: var(--white); }
+
+  .section-header { margin-bottom: 3rem; }
+  .section-number {
+    font-size: 0.72rem; letter-spacing: 0.18em; text-transform: uppercase;
+    color: var(--accent); font-weight: 700; margin-bottom: 0.5rem;
+  }
+  h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.8rem, 3.5vw, 2.6rem);
+    color: var(--navy);
+    font-weight: 700;
+    line-height: 1.2;
+  }
+  h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.35rem;
+    color: var(--blue);
+    font-weight: 700;
+    margin: 2.5rem 0 0.75rem;
+  }
+  p { margin-bottom: 1.2rem; color: var(--text); }
+
+  .divider {
+    width: 48px; height: 3px;
+    background: var(--accent);
+    margin: 1rem 0 0;
+  }
+
+  /* TIMELINE */
+  .timeline { margin-top: 2.5rem; position: relative; }
+  .timeline::before {
+    content: '';
+    position: absolute; left: 16px; top: 8px; bottom: 8px;
+    width: 2px; background: linear-gradient(to bottom, var(--accent), var(--blue));
+  }
+  .tl-item {
+    display: flex; gap: 2rem; margin-bottom: 2rem;
+    animation: fadeUp 0.5s ease both;
+  }
+  .tl-dot {
+    flex-shrink: 0; width: 34px; height: 34px;
+    border-radius: 50%; background: var(--navy);
+    border: 3px solid var(--accent);
+    display: flex; align-items: center; justify-content: center;
+    z-index: 1;
+  }
+  .tl-dot-inner { width: 10px; height: 10px; border-radius: 50%; background: var(--accent); }
+  .tl-body {
+    flex: 1; background: var(--white);
+    border: 1px solid var(--border);
+    border-left: 4px solid var(--accent);
+    padding: 1rem 1.5rem;
+    border-radius: 0 4px 4px 0;
+  }
+  section:nth-child(even) .tl-body { background: var(--light); }
+  .tl-year { font-size: 0.78rem; color: var(--accent); font-weight: 700; letter-spacing: 0.1em; }
+  .tl-title { font-weight: 600; color: var(--navy); font-size: 0.95rem; margin-top: 0.15rem; }
+  .tl-desc { font-size: 0.88rem; color: var(--muted); margin-top: 0.25rem; line-height: 1.5; }
+
+  /* CONCEPT CARDS */
+  .concepts-grid { display: grid; gap: 1.5rem; margin-top: 2rem; }
+  .concept-card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-top: 4px solid var(--blue);
+    padding: 1.75rem;
+    border-radius: 0 0 4px 4px;
+    transition: box-shadow 0.2s, transform 0.2s;
+  }
+  .concept-card:hover { box-shadow: 0 8px 32px rgba(13,33,55,0.1); transform: translateY(-2px); }
+  .concept-card-header { display: flex; align-items: flex-start; gap: 1rem; margin-bottom: 1rem; }
+  .concept-icon {
+    width: 44px; height: 44px; flex-shrink: 0;
+    background: var(--navy); color: var(--accent);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.3rem; border-radius: 4px;
+  }
+  .concept-title { font-family: 'Playfair Display', serif; font-size: 1.15rem; color: var(--navy); font-weight: 700; }
+  .concept-def { font-size: 0.93rem; color: var(--text); margin-bottom: 0.75rem; }
+  .concept-example {
+    background: var(--light);
+    border-left: 3px solid var(--accent);
+    padding: 0.75rem 1rem;
+    border-radius: 0 4px 4px 0;
+    font-size: 0.87rem; color: var(--muted);
+  }
+  .concept-example strong { color: var(--navy); }
+
+  /* TABLE */
+  .table-wrap { overflow-x: auto; margin-top: 2rem; }
+  table {
+    width: 100%; border-collapse: collapse;
+    font-size: 0.88rem;
+  }
+  thead tr { background: var(--navy); }
+  thead th {
+    padding: 0.9rem 1rem; text-align: left;
+    color: var(--white); font-weight: 600;
+    letter-spacing: 0.04em; font-size: 0.82rem;
+    text-transform: uppercase;
+  }
+  tbody tr { border-bottom: 1px solid var(--border); transition: background 0.15s; }
+  tbody tr:hover { background: rgba(200,151,58,0.06); }
+  tbody tr:nth-child(even) { background: rgba(13,33,55,0.03); }
+  tbody tr:nth-child(even):hover { background: rgba(200,151,58,0.06); }
+  td { padding: 0.85rem 1rem; vertical-align: top; line-height: 1.5; }
+  .badge {
+    display: inline-block; padding: 0.2rem 0.6rem;
+    border-radius: 2px; font-size: 0.75rem; font-weight: 700;
+    letter-spacing: 0.06em; text-transform: uppercase;
+  }
+  .badge-qual { background: #e8f4e8; color: #2d6a2d; }
+  .badge-quant { background: #e8eef8; color: #1a3a7a; }
+  .badge-nom { background: #fef3e2; color: #7a4a0a; }
+  .badge-ord { background: #fde8e8; color: #7a1a1a; }
+  .badge-int { background: #e8f0fe; color: #1a2a7a; }
+  .badge-raz { background: #e8fef0; color: #0a5a2a; }
+
+  /* APPLICATION CARDS */
+  .app-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(380px, 1fr)); gap: 2rem; margin-top: 2rem; }
+  .app-card {
+    background: var(--light);
+    border: 1px solid var(--border);
+    padding: 2rem;
+    border-radius: 4px;
+  }
+  section:nth-child(even) .app-card { background: var(--white); }
+  .app-card-number {
+    font-family: 'Playfair Display', serif;
+    font-size: 3rem; font-weight: 900;
+    color: rgba(13,33,55,0.08);
+    line-height: 1; margin-bottom: 0.5rem;
+  }
+  .app-card h3 { font-size: 1.1rem; margin: 0 0 0.75rem; }
+  .app-card p { font-size: 0.9rem; margin: 0; }
+
+  /* POVERTY CHART */
+  .chart-wrap { margin-top: 2.5rem; background: var(--white); border: 1px solid var(--border); padding: 2rem; border-radius: 4px; }
+  .chart-title { font-family: 'Playfair Display', serif; font-size: 1rem; color: var(--navy); margin-bottom: 1.5rem; font-weight: 700; }
+  .chart-bars { display: flex; flex-direction: column; gap: 0.6rem; }
+  .chart-row { display: flex; align-items: center; gap: 1rem; }
+  .chart-label { width: 40px; font-size: 0.78rem; color: var(--muted); text-align: right; flex-shrink: 0; }
+  .chart-bar-wrap { flex: 1; background: rgba(13,33,55,0.06); border-radius: 2px; height: 28px; position: relative; }
+  .chart-bar {
+    height: 100%; border-radius: 2px;
+    display: flex; align-items: center; padding-left: 0.5rem;
+    font-size: 0.75rem; font-weight: 600; color: white;
+    transition: width 1.2s cubic-bezier(.22,.68,0,1.2);
+  }
+  .bar-mon { background: linear-gradient(90deg, #c0392b, #e74c3c); }
+  .bar-ext { background: linear-gradient(90deg, #e67e22, #f39c12); }
+  .chart-legend { display: flex; gap: 1.5rem; margin-top: 1rem; }
+  .legend-item { display: flex; align-items: center; gap: 0.4rem; font-size: 0.8rem; color: var(--muted); }
+  .legend-dot { width: 12px; height: 12px; border-radius: 2px; flex-shrink: 0; }
+
+  /* INDICATORS TABLE */
+  .indicators { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-top: 2rem; }
+  .indicator-card {
+    background: var(--navy);
+    color: var(--white);
+    padding: 1.5rem;
+    border-radius: 4px;
+    border-top: 3px solid var(--accent);
+    text-align: center;
+  }
+  .indicator-name { font-size: 0.8rem; color: rgba(255,255,255,0.65); margin-bottom: 0.5rem; }
+  .indicator-formula { font-size: 0.85rem; color: var(--accent); font-weight: 600; font-style: italic; }
+  .indicator-use { font-size: 0.78rem; color: rgba(255,255,255,0.5); margin-top: 0.5rem; }
+
+  /* FOOTER */
+  footer {
+    background: var(--navy);
+    color: rgba(255,255,255,0.5);
+    text-align: center;
+    padding: 2.5rem;
+    font-size: 0.85rem;
+    border-top: 3px solid var(--accent);
+  }
+  footer strong { color: var(--accent); }
+
+  /* TOC SIDEBAR */
+  .toc {
+    position: fixed; right: 1.5rem; top: 50%; transform: translateY(-50%);
+    display: flex; flex-direction: column; gap: 0.5rem;
+    z-index: 50;
+  }
+  .toc-dot {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: rgba(13,33,55,0.2);
+    cursor: pointer; transition: all 0.2s;
+    title: "";
+  }
+  .toc-dot:hover, .toc-dot.active { background: var(--accent); transform: scale(1.4); }
+
+  @media (max-width: 768px) {
+    .nav-links { display: none; }
+    .hero-meta { grid-template-columns: 1fr; }
+    .hero-meta-item:nth-child(odd) { border-right: none; }
+    .hero-meta-item:nth-child(1) { border-bottom: 1px solid rgba(255,255,255,0.1); }
+    .app-grid { grid-template-columns: 1fr; }
+    .toc { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-brand">📊 Estadística</div>
+  <ul class="nav-links">
+    <li><a href="#historia">Historia</a></li>
+    <li><a href="#conceptos">Conceptos</a></li>
+    <li><a href="#variables">Variables</a></li>
+    <li><a href="#aplicaciones">Aplicaciones</a></li>
+  </ul>
+</nav>
+
+<!-- TOC DOTS -->
+<div class="toc">
+  <div class="toc-dot active" onclick="scrollTo('#hero')" title="Inicio"></div>
+  <div class="toc-dot" onclick="location.href='#historia'" title="Historia"></div>
+  <div class="toc-dot" onclick="location.href='#conceptos'" title="Conceptos"></div>
+  <div class="toc-dot" onclick="location.href='#variables'" title="Variables"></div>
+  <div class="toc-dot" onclick="location.href='#aplicaciones'" title="Aplicaciones"></div>
+</div>
+
+<!-- HERO / PORTADA -->
+<div class="hero" id="hero">
+  <div class="hero-grid"></div>
+  <div class="hero-content">
+    <div class="hero-tag">Taller 1 · Estadística · 2026</div>
+    <h1>Fundamentos de<br><span>Estadística</span></h1>
+    <p class="hero-sub">en la Administración Pública Colombiana</p>
+    <div class="hero-meta">
+      <div class="hero-meta-item">
+        <div class="meta-label">Estudiante</div>
+        <div class="meta-value">Escriba su nombre aquí</div>
+      </div>
+      <div class="hero-meta-item">
+        <div class="meta-label">Curso</div>
+        <div class="meta-value">Estadística – Pregrado</div>
+      </div>
+      <div class="hero-meta-item">
+        <div class="meta-label">Docente</div>
+        <div class="meta-value">Dagoberto Salgado Horta</div>
+      </div>
+      <div class="hero-meta-item">
+        <div class="meta-label">Fecha</div>
+        <div class="meta-value">3 de mayo de 2026</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- HISTORIA -->
+<section id="historia">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-number">01 — Historia</div>
+      <h2>Historia de la Estadística</h2>
+      <div class="divider"></div>
+    </div>
+
+    <p>La estadística nació de la necesidad de los Estados de conocer y administrar sus territorios y poblaciones. Desde los primeros censos de la antigüedad hasta los algoritmos de Big Data actuales, su evolución refleja el progreso mismo de la civilización.</p>
+
+    <h3>Aportes de las Civilizaciones Antiguas</h3>
+    <p>Las primeras manifestaciones estadísticas surgieron con la necesidad de los gobiernos de registrar su realidad:</p>
+    <ul style="margin: 0 0 1.5rem 1.5rem; color: var(--text);">
+      <li><strong>Mesopotamia (~3000 a.C.):</strong> Los sumerios realizaron los primeros censos conocidos para administrar el cobro de impuestos y la distribución de alimentos.</li>
+      <li><strong>Egipto Antiguo (~2500 a.C.):</strong> El faraón ordenaba censos de población y ganado para planificar las construcciones y campañas militares.</li>
+      <li><strong>China (~1000 a.C.):</strong> La dinastía Zhou registraba datos de población y tierras agrícolas con fines tributarios.</li>
+      <li><strong>Roma (siglo I a.C.):</strong> El Imperio instituyó el <em>census</em>, registro sistemático de ciudadanos y propiedades cada cinco años.</li>
+    </ul>
+
+    <h3>Línea de Tiempo: Evolución Histórica</h3>
+    <div class="timeline" id="timeline">
+
+      <div class="tl-item">
+        <div class="tl-dot"><div class="tl-dot-inner"></div></div>
+        <div class="tl-body">
+          <div class="tl-year">~3000 a.C.</div>
+          <div class="tl-title">Primeros censos sumerios</div>
+          <div class="tl-desc">Mesopotamia registra datos de población y recursos agrícolas para la administración tributaria.</div>
+        </div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-dot"><div class="tl-dot-inner"></div></div>
+        <div class="tl-body">
+          <div class="tl-year">44 a.C.</div>
+          <div class="tl-title">Census romano institucionalizado</div>
+          <div class="tl-desc">Roma realiza registros sistemáticos de ciudadanos y propiedades cada cinco años.</div>
+        </div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-dot"><div class="tl-dot-inner"></div></div>
+        <div class="tl-body">
+          <div class="tl-year">1662</div>
+          <div class="tl-title">Aritmética política – John Graunt</div>
+          <div class="tl-desc">Graunt analiza tablas de mortalidad en Londres, fundando la demografía estadística moderna.</div>
+        </div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-dot"><div class="tl-dot-inner"></div></div>
+        <div class="tl-body">
+          <div class="tl-year">1763</div>
+          <div class="tl-title">Teorema de Bayes</div>
+          <div class="tl-desc">El reverendo Thomas Bayes establece las bases de la probabilidad condicional, piedra angular de la inferencia estadística.</div>
+        </div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-dot"><div class="tl-dot-inner"></div></div>
+        <div class="tl-body">
+          <div class="tl-year">1809</div>
+          <div class="tl-title">Distribución normal – Carl Friedrich Gauss</div>
+          <div class="tl-desc">Gauss formaliza la curva de distribución normal y el método de mínimos cuadrados.</div>
+        </div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-dot"><div class="tl-dot-inner"></div></div>
+        <div class="tl-body">
+          <div class="tl-year">1853</div>
+          <div class="tl-title">Estadística en salud pública – Florence Nightingale</div>
+          <div class="tl-desc">Nightingale usa diagramas estadísticos para demostrar que las infecciones mataban más soldados que las batallas.</div>
+        </div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-dot"><div class="tl-dot-inner"></div></div>
+        <div class="tl-body">
+          <div class="tl-year">1908</div>
+          <div class="tl-title">Prueba t de Student – William Gosset</div>
+          <div class="tl-desc">Gosset desarrolla la distribución t para muestras pequeñas, revolucionando el análisis experimental.</div>
+        </div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-dot"><div class="tl-dot-inner"></div></div>
+        <div class="tl-body">
+          <div class="tl-year">1925</div>
+          <div class="tl-title">Estadística inferencial moderna – Ronald Fisher</div>
+          <div class="tl-desc">Fisher consolida el diseño experimental, el análisis de varianza (ANOVA) y las pruebas de hipótesis.</div>
+        </div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-dot"><div class="tl-dot-inner"></div></div>
+        <div class="tl-body">
+          <div class="tl-year">1950 – hoy</div>
+          <div class="tl-title">Era computacional y Big Data</div>
+          <div class="tl-desc">Los computadores permiten procesar millones de datos. Surgen el machine learning, la inteligencia artificial y la ciencia de datos como extensiones de la estadística.</div>
+        </div>
+      </div>
+
+    </div>
+
+    <h3>Importancia en la Actualidad</h3>
+    <p>Hoy la estadística es la columna vertebral de la toma de decisiones en todos los sectores. En Colombia, el <strong>DANE</strong> lidera la producción estadística oficial, generando información esencial para la administración pública, el diseño de políticas sociales y la rendición de cuentas ante la ciudadanía.</p>
+  </div>
+</section>
+
+<!-- CONCEPTOS -->
+<section id="conceptos">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-number">02 — Conceptos</div>
+      <h2>Conceptos Fundamentales de la Estadística</h2>
+      <div class="divider"></div>
+    </div>
+    <p>A continuación se presentan los ocho conceptos fundamentales de la estadística, cada uno acompañado de un ejemplo contextualizado en la administración pública colombiana.</p>
+
+    <div class="concepts-grid">
+
+      <div class="concept-card">
+        <div class="concept-card-header">
+          <div class="concept-icon">📊</div>
+          <div class="concept-title">Estadística Descriptiva</div>
+        </div>
+        <p class="concept-def">Rama que se ocupa de recopilar, organizar, resumir y presentar datos de manera significativa. Describe las características de un conjunto de observaciones sin generalizar más allá de los datos disponibles.</p>
+        <div class="concept-example"><strong>🏛️ Ejemplo:</strong> El DANE publica cada año la tasa de desempleo, el índice de pobreza y la inflación. Estos indicadores resumen la situación económica del país usando estadística descriptiva (medias, porcentajes, tablas de frecuencia).</div>
+      </div>
+
+      <div class="concept-card">
+        <div class="concept-card-header">
+          <div class="concept-icon">🔭</div>
+          <div class="concept-title">Estadística Inferencial</div>
+        </div>
+        <p class="concept-def">Utiliza datos de una muestra para hacer generalizaciones, estimaciones y predicciones sobre una población más amplia. Se apoya en la teoría de la probabilidad para cuantificar la incertidumbre de sus conclusiones.</p>
+        <div class="concept-example"><strong>🏛️ Ejemplo:</strong> La Encuesta Nacional de Calidad de Vida (ECV) encuesta ~30.000 hogares para inferir las condiciones de vida de los ~16 millones de hogares colombianos, permitiendo diseñar políticas de vivienda, salud y educación.</div>
+      </div>
+
+      <div class="concept-card">
+        <div class="concept-card-header">
+          <div class="concept-icon">🌐</div>
+          <div class="concept-title">Población</div>
+        </div>
+        <p class="concept-def">Conjunto completo de todos los individuos, objetos, eventos o mediciones que poseen una característica de interés para el investigador. Puede ser finita (contable) o infinita.</p>
+        <div class="concept-example"><strong>🏛️ Ejemplo:</strong> Para evaluar la gestión municipal en Colombia, la "población" es el conjunto de los 1.102 municipios del país, con todos sus alcaldes y administraciones.</div>
+      </div>
+
+      <div class="concept-card">
+        <div class="concept-card-header">
+          <div class="concept-icon">🔬</div>
+          <div class="concept-title">Muestra</div>
+        </div>
+        <p class="concept-def">Subconjunto representativo y seleccionado de la población, elegido para extraer conclusiones válidas sobre el total. Una buena muestra debe ser aleatoria y suficientemente grande para reflejar la diversidad de la población.</p>
+        <div class="concept-example"><strong>🏛️ Ejemplo:</strong> Para medir la satisfacción ciudadana con los servicios de salud en Bogotá (8 millones de habitantes), se podría encuestar a 1.500 personas seleccionadas aleatoriamente en cada localidad.</div>
+      </div>
+
+      <div class="concept-card">
+        <div class="concept-card-header">
+          <div class="concept-icon">🎯</div>
+          <div class="concept-title">Parámetro</div>
+        </div>
+        <p class="concept-def">Medida numérica que describe una característica de toda la <em>población</em>. Los parámetros son generalmente desconocidos y se representan con letras griegas (μ, σ, π). Solo se conocen cuando se estudia toda la población.</p>
+        <div class="concept-example"><strong>🏛️ Ejemplo:</strong> El ingreso promedio real de todos los servidores públicos colombianos es un parámetro (μ). Solo sería exactamente conocido si se tuvieran datos de la totalidad de funcionarios del Estado.</div>
+      </div>
+
+      <div class="concept-card">
+        <div class="concept-card-header">
+          <div class="concept-icon">📐</div>
+          <div class="concept-title">Estadístico</div>
+        </div>
+        <p class="concept-def">Medida calculada a partir de los datos de una <em>muestra</em>. Se usa para estimar el parámetro poblacional correspondiente. Se denota con letras latinas (x̄, s, p̂). Varía de muestra en muestra.</p>
+        <div class="concept-example"><strong>🏛️ Ejemplo:</strong> La Contraloría encuesta 500 servidores y obtiene un salario promedio de $3.200.000. Ese valor es un estadístico (x̄) que estima el parámetro real de todos los funcionarios.</div>
+      </div>
+
+      <div class="concept-card">
+        <div class="concept-card-header">
+          <div class="concept-icon">🎲</div>
+          <div class="concept-title">Muestreo</div>
+        </div>
+        <p class="concept-def">Proceso de selección de los elementos de la muestra a partir de la población. Los principales tipos son: aleatorio simple, estratificado, por conglomerados y sistemático. La calidad del muestreo determina la validez de las inferencias.</p>
+        <div class="concept-example"><strong>🏛️ Ejemplo:</strong> El DANE usa muestreo estratificado multietápico en la Gran Encuesta Integrada de Hogares (GEIH): divide el país por regiones, luego por zonas urbano-rurales, luego por manzanas y finalmente por hogares.</div>
+      </div>
+
+      <div class="concept-card">
+        <div class="concept-card-header">
+          <div class="concept-icon">⚠️</div>
+          <div class="concept-title">Sesgo</div>
+        </div>
+        <p class="concept-def">Error sistemático en el diseño, la recolección, el análisis o la interpretación de datos estadísticos que lleva a resultados incorrectos o que no representan fielmente la realidad de la población. El sesgo distorsiona las conclusiones de manera consistente en una dirección.</p>
+        <div class="concept-example"><strong>🏛️ Ejemplo:</strong> Si una encuesta sobre percepción de seguridad solo se aplica en zonas comerciales del centro de la ciudad, los resultados estarán sesgados al excluir barrios periféricos con mayor inseguridad, llevando al gobierno a subestimar el problema.</div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- VARIABLES -->
+<section id="variables">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-number">03 — Variables</div>
+      <h2>Variables Estadísticas</h2>
+      <div class="divider"></div>
+    </div>
+
+    <h3>Concepto de Variable</h3>
+    <p>En estadística, una <strong>variable</strong> es cualquier característica, atributo o propiedad que puede tomar diferentes valores en los distintos elementos de una población o muestra. Se denomina "variable" precisamente porque su valor <em>varía</em> de un individuo a otro. Por ejemplo, al estudiar los funcionarios públicos colombianos, la edad, el nivel educativo, el salario y el departamento donde trabajan son todas variables.</p>
+
+    <h3>Clasificación según su Naturaleza</h3>
+    <p><strong>Variables Cualitativas:</strong> Expresan categorías o atributos que no se pueden medir numéricamente de forma significativa.</p>
+    <ul style="margin: 0 0 1rem 1.5rem; color: var(--text); font-size: 0.95rem;">
+      <li><strong>Nominales:</strong> Las categorías no tienen orden natural. <em>Ej: tipo de entidad pública.</em></li>
+      <li><strong>Ordinales:</strong> Las categorías tienen jerarquía pero distancias no uniformes. <em>Ej: nivel de satisfacción ciudadana.</em></li>
+    </ul>
+    <p><strong>Variables Cuantitativas:</strong> Representan cantidades numéricas con las que se pueden realizar operaciones aritméticas.</p>
+    <ul style="margin: 0 0 1.5rem 1.5rem; color: var(--text); font-size: 0.95rem;">
+      <li><strong>Discretas:</strong> Valores enteros contables; no admiten fracciones. <em>Ej: número de quejas recibidas.</em></li>
+      <li><strong>Continuas:</strong> Cualquier valor dentro de un rango, incluyendo decimales. <em>Ej: presupuesto ejecutado.</em></li>
+    </ul>
+
+    <h3>Escalas de Medición</h3>
+    <p>Las escalas determinan el nivel de información contenido en los datos y las operaciones estadísticas válidas:</p>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Escala</th>
+            <th>Descripción</th>
+            <th>Operaciones permitidas</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="badge badge-nom">Nominal</span></td>
+            <td>Clasifica sin orden ni distancias</td>
+            <td>Frecuencias, moda</td>
+          </tr>
+          <tr>
+            <td><span class="badge badge-ord">Ordinal</span></td>
+            <td>Clasifica con orden pero sin distancias iguales</td>
+            <td>Mediana, percentiles</td>
+          </tr>
+          <tr>
+            <td><span class="badge badge-int">Intervalo</span></td>
+            <td>Orden + distancias iguales, sin cero absoluto</td>
+            <td>Media, desviación estándar</td>
+          </tr>
+          <tr>
+            <td><span class="badge badge-raz">Razón</span></td>
+            <td>Intervalo + cero absoluto real</td>
+            <td>Todas, incluida razón/cociente</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>Tabla de Clasificación de Variables en Administración Pública</h3>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Variable</th>
+            <th>Tipo</th>
+            <th>Naturaleza</th>
+            <th>Escala</th>
+            <th>Ejemplo en Adm. Pública</th>
+            <th>Justificación</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Tipo de entidad pública</td>
+            <td><span class="badge badge-qual">Cualit.</span></td>
+            <td>Nominal</td>
+            <td><span class="badge badge-nom">Nominal</span></td>
+            <td>Ministerio, alcaldía, gobernación</td>
+            <td>Sin orden entre categorías; solo identifican</td>
+          </tr>
+          <tr>
+            <td>Nivel de satisfacción ciudadana</td>
+            <td><span class="badge badge-qual">Cualit.</span></td>
+            <td>Ordinal</td>
+            <td><span class="badge badge-ord">Ordinal</span></td>
+            <td>Deficiente / Regular / Bueno / Excelente</td>
+            <td>Hay jerarquía pero distancias no son uniformes</td>
+          </tr>
+          <tr>
+            <td>Temperatura de salas (°C)</td>
+            <td><span class="badge badge-quant">Cuantit.</span></td>
+            <td>Continua</td>
+            <td><span class="badge badge-int">Intervalo</span></td>
+            <td>Control ambiental en edificios públicos</td>
+            <td>Cero arbitrario (0°C ≠ ausencia); no permite razones</td>
+          </tr>
+          <tr>
+            <td>Presupuesto asignado (pesos)</td>
+            <td><span class="badge badge-quant">Cuantit.</span></td>
+            <td>Continua</td>
+            <td><span class="badge badge-raz">Razón</span></td>
+            <td>Recursos de cada programa del PGN</td>
+            <td>Cero absoluto ($0 = sin recursos); permite todas las operaciones</td>
+          </tr>
+          <tr>
+            <td>Número de funcionarios</td>
+            <td><span class="badge badge-quant">Cuantit.</span></td>
+            <td>Discreta</td>
+            <td><span class="badge badge-raz">Razón</span></td>
+            <td>Planta de personal de cada ministerio</td>
+            <td>Valores enteros contables con cero real</td>
+          </tr>
+          <tr>
+            <td>Departamento de procedencia</td>
+            <td><span class="badge badge-qual">Cualit.</span></td>
+            <td>Nominal</td>
+            <td><span class="badge badge-nom">Nominal</span></td>
+            <td>Origen de beneficiarios de subsidios</td>
+            <td>Sin orden entre departamentos; solo clasifican</td>
+          </tr>
+          <tr>
+            <td>Nivel educativo del funcionario</td>
+            <td><span class="badge badge-qual">Cualit.</span></td>
+            <td>Ordinal</td>
+            <td><span class="badge badge-ord">Ordinal</span></td>
+            <td>Técnico / Profesional / Especialista / Magíster</td>
+            <td>Jerarquía educativa; intervalos no uniformes</td>
+          </tr>
+          <tr>
+            <td>Tasa de cobertura en salud (%)</td>
+            <td><span class="badge badge-quant">Cuantit.</span></td>
+            <td>Continua</td>
+            <td><span class="badge badge-raz">Razón</span></td>
+            <td>% de población afiliada al SGSSS por municipio</td>
+            <td>Cero real (0% = sin cobertura); admite comparaciones directas</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- APLICACIONES -->
+<section id="aplicaciones">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-number">04 — Aplicaciones</div>
+      <h2>Aplicaciones en la Administración Pública</h2>
+      <div class="divider"></div>
+    </div>
+    <p>La estadística es la columna vertebral de la gestión pública moderna. Permite al Estado medir, evaluar, planificar y rendir cuentas ante la ciudadanía con base en evidencia empírica.</p>
+
+    <div class="app-grid">
+      <div class="app-card">
+        <div class="app-card-number">01</div>
+        <h3>Indicadores de Gestión</h3>
+        <p>Los indicadores de gestión son medidas cuantitativas que permiten evaluar el desempeño de entidades públicas. El <strong>Sistema SISMEG del DNP</strong> monitorea el porcentaje de ejecución presupuestal, el número de trámites simplificados y el tiempo promedio de resolución de peticiones ciudadanas. Con estos datos, el gobierno identifica rezagos y exige cuentas a los responsables.</p>
+      </div>
+      <div class="app-card">
+        <div class="app-card-number">02</div>
+        <h3>Evaluación de Políticas Públicas</h3>
+        <p>La evaluación estadística determina si un programa está logrando sus efectos esperados. El programa <strong>Familias en Acción</strong> fue evaluado mediante el método de diferencias en diferencias, comparando resultados educativos y nutricionales de beneficiarios vs. no beneficiarios. Los resultados evidenciaron mejoras en asistencia escolar y nutrición infantil, justificando su continuación.</p>
+      </div>
+    </div>
+
+    <h3>Análisis de Pobreza en Colombia</h3>
+    <p>Colombia mide la pobreza con el <strong>Índice de Pobreza Monetaria</strong> y el <strong>Índice de Pobreza Multidimensional (IPM)</strong>, calculados por el DANE. El IPM integra variables de educación, condiciones de la niñez, trabajo, salud y acceso a servicios públicos.</p>
+
+    <div class="chart-wrap">
+      <div class="chart-title">Tasas de Pobreza en Colombia — 2015 a 2024 (datos ilustrativos basados en tendencias DANE)</div>
+      <div class="chart-bars" id="poverty-chart"></div>
+      <div class="chart-legend">
+        <div class="legend-item"><div class="legend-dot" style="background:#e74c3c;"></div>Pobreza Monetaria</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#f39c12;"></div>Pobreza Extrema</div>
+      </div>
+    </div>
+
+    <h3>Cobertura en Educación</h3>
+    <p>El <strong>Sistema Integrado de Matrícula (SIMAT)</strong> del Ministerio de Educación registra datos de más de 10 millones de estudiantes. Los indicadores estadísticos derivados permiten al Estado asignar recursos con equidad y eficiencia:</p>
+
+    <div class="indicators">
+      <div class="indicator-card">
+        <div class="indicator-name">Tasa de Cobertura Bruta</div>
+        <div class="indicator-formula">Matriculados / Pob. en edad escolar × 100</div>
+        <div class="indicator-use">Identifica municipios con déficit de cupos</div>
+      </div>
+      <div class="indicator-card">
+        <div class="indicator-name">Tasa de Deserción</div>
+        <div class="indicator-formula">Desertores / Total × 100</div>
+        <div class="indicator-use">Focaliza programas de permanencia escolar</div>
+      </div>
+      <div class="indicator-card">
+        <div class="indicator-name">Tasa de Reprobación</div>
+        <div class="indicator-formula">Reprobados / Total × 100</div>
+        <div class="indicator-use">Evalúa calidad del proceso educativo</div>
+      </div>
+      <div class="indicator-card">
+        <div class="indicator-name">Relación Alumno-Docente</div>
+        <div class="indicator-formula">Estudiantes / Docentes</div>
+        <div class="indicator-use">Planifica contratación de maestros</div>
+      </div>
+    </div>
+
+    <h3>Cobertura en Salud</h3>
+    <p>El <strong>Sistema SISPRO</strong> del Ministerio de Salud registra los afiliados al sistema por municipio, régimen (contributivo o subsidiado) y grupo etario. Permite identificar brechas de cobertura en municipios rurales y orientar los recursos del MINSALUD hacia las poblaciones más vulnerables. Gracias a estas estadísticas, Colombia ha aumentado progresivamente la cobertura en salud hasta superar el 95% de la población.</p>
+  </div>
+</section>
+
+<!-- CONCLUSIONES -->
+<section id="conclusiones" style="background: var(--navy); color: var(--white);">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-number" style="color: var(--accent);">05 — Conclusiones</div>
+      <h2 style="color: var(--white);">Reflexiones Finales</h2>
+      <div class="divider"></div>
+    </div>
+    <p style="color: rgba(255,255,255,0.75);">La estadística no es un conjunto abstracto de fórmulas; es un lenguaje para comprender la realidad social y un instrumento para ejercer una gestión pública basada en evidencia:</p>
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 1.5rem; margin-top: 2rem;">
+      <div style="border-left: 3px solid var(--accent); padding: 1rem 1.5rem;">
+        <div style="color: var(--accent); font-weight: 700; margin-bottom: 0.3rem;">Conocer la realidad</div>
+        <p style="color: rgba(255,255,255,0.65); font-size: 0.9rem; margin: 0;">Permite conocer la realidad a través de censos, encuestas e indicadores confiables.</p>
+      </div>
+      <div style="border-left: 3px solid var(--accent); padding: 1rem 1.5rem;">
+        <div style="color: var(--accent); font-weight: 700; margin-bottom: 0.3rem;">Fundamentar políticas</div>
+        <p style="color: rgba(255,255,255,0.65); font-size: 0.9rem; margin: 0;">Fundamenta las políticas públicas con evidencia empírica en lugar de intuición o ideología.</p>
+      </div>
+      <div style="border-left: 3px solid var(--accent); padding: 1rem 1.5rem;">
+        <div style="color: var(--accent); font-weight: 700; margin-bottom: 0.3rem;">Rendición de cuentas</div>
+        <p style="color: rgba(255,255,255,0.65); font-size: 0.9rem; margin: 0;">Garantiza la rendición de cuentas al hacer medible el desempeño del Estado ante la ciudadanía.</p>
+      </div>
+      <div style="border-left: 3px solid var(--accent); padding: 1rem 1.5rem;">
+        <div style="color: var(--accent); font-weight: 700; margin-bottom: 0.3rem;">Promover la equidad</div>
+        <p style="color: rgba(255,255,255,0.65); font-size: 0.9rem; margin: 0;">Promueve la equidad al identificar brechas y orientar recursos hacia los más vulnerables.</p>
+      </div>
+    </div>
+
+    <div style="margin-top: 3rem; border-top: 1px solid rgba(255,255,255,0.12); padding-top: 2rem;">
+      <h3 style="color: var(--white);">Referencias</h3>
+      <ul style="color: rgba(255,255,255,0.6); font-size: 0.88rem; line-height: 2; margin-left: 1.2rem;">
+        <li>DANE. (2024). <em>Gran Encuesta Integrada de Hogares (GEIH)</em>. https://www.dane.gov.co</li>
+        <li>DNP. (2024). <em>Sistema de Seguimiento a Metas de Gobierno (SISMEG)</em>. https://www.dnp.gov.co</li>
+        <li>Fisher, R. A. (1925). <em>Statistical Methods for Research Workers</em>. Oliver and Boyd.</li>
+        <li>Mendenhall, W., Beaver, R., & Beaver, B. (2010). <em>Introducción a la Probabilidad y Estadística</em> (13.ª ed.). Cengage Learning.</li>
+        <li>Ministerio de Educación Nacional. (2024). <em>Sistema Integrado de Matrícula (SIMAT)</em>. https://www.mineducacion.gov.co</li>
+        <li>Stigler, S. M. (1986). <em>The History of Statistics</em>. Harvard University Press.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <strong>Taller 1 – Fundamentos de Estadística en la Administración Pública</strong><br>
+  Estadística · Pregrado · Docente: Dagoberto Salgado Horta · 2026
+</footer>
+
+<script>
+// Animated poverty chart
+const povertyData = [
+  { year: "2015", mon: 27.8, ext: 7.9 },
+  { year: "2016", mon: 28.0, ext: 8.5 },
+  { year: "2017", mon: 26.9, ext: 7.4 },
+  { year: "2018", mon: 27.0, ext: 7.2 },
+  { year: "2019", mon: 35.7, ext: 9.6 },
+  { year: "2020", mon: 39.3, ext: 12.2 },
+  { year: "2021", mon: 39.3, ext: 12.2 },
+  { year: "2022", mon: 36.6, ext: 11.3 },
+  { year: "2023", mon: 33.0, ext: 10.9 },
+  { year: "2024", mon: 31.5, ext: 10.2 },
+];
+const maxVal = 45;
+const chart = document.getElementById('poverty-chart');
+
+povertyData.forEach(d => {
+  const row = document.createElement('div');
+  row.className = 'chart-row';
+  row.innerHTML = `
+    <div class="chart-label">${d.year}</div>
+    <div class="chart-bar-wrap">
+      <div class="chart-bar bar-mon" style="width:0%" data-w="${(d.mon/maxVal*100).toFixed(1)}%">
+        ${d.mon}%
+      </div>
+    </div>
+    <div class="chart-bar-wrap" style="max-width:200px">
+      <div class="chart-bar bar-ext" style="width:0%" data-w="${(d.ext/maxVal*100).toFixed(1)}%">
+        ${d.ext}%
+      </div>
+    </div>
+  `;
+  chart.appendChild(row);
+});
+
+// Animate bars on scroll
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      document.querySelectorAll('.chart-bar').forEach(bar => {
+        bar.style.width = bar.dataset.w;
+      });
+    }
+  });
+}, { threshold: 0.3 });
+observer.observe(document.getElementById('poverty-chart'));
+</script>
+</body>
+</html>
